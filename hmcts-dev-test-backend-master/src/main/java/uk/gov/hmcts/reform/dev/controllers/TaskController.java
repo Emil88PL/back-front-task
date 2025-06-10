@@ -1,8 +1,10 @@
 package uk.gov.hmcts.reform.dev.controllers;
 
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.entity.TaskEntity;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.service.TaskService;
@@ -32,6 +34,11 @@ public class TaskController {
     @GetMapping
     public Iterable<TaskEntity> getAllTasks() {
         return taskService.getAllTasks();
+    }
+
+    @PutMapping("{id}")
+    public TaskEntity updateTask(@PathVariable Long id, @RequestBody UpdateTaskDto updateTaskDto) {
+        return taskService.updateTask(id, updateTaskDto);
     }
 
     @PutMapping("{id}/status")

@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.dev.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.entity.TaskEntity;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
@@ -36,6 +37,24 @@ public class TaskService {
     }
 
     public TaskEntity createTask(TaskEntity task) {
+        return taskRepository.save(task);
+    }
+
+    public TaskEntity updateTask(Long id, UpdateTaskDto updateTaskDto) {
+        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+
+        if(updateTaskDto.getTitle() != null) {
+            task.setTitle(updateTaskDto.getTitle());
+        }
+
+        if(updateTaskDto.getDescription() != null) {
+            task.setDescription(updateTaskDto.getDescription());
+        }
+
+        if(updateTaskDto.getDueDateTime() != null) {
+            task.setDueDateTime(updateTaskDto.getDueDateTime());
+        }
+
         return taskRepository.save(task);
     }
 

@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @Configuration
 public class DataInitializer {
 
-    @Bean
-    CommandLineRunner initDatabase(TaskRepository taskRepository) {
-        return args -> {
-            taskRepository.save(new TaskEntity("Task 1", "Description 1", TaskStatus.TODO, LocalDateTime.now()));
-            taskRepository.save(new TaskEntity("Task 2", "Description 2", TaskStatus.TODO, LocalDateTime.now()));
-            taskRepository.save(new TaskEntity("Task 3", "Description 3", TaskStatus.TODO, LocalDateTime.now()));
-        };
-    }
+//    @Bean
+//    CommandLineRunner initDatabase(TaskRepository taskRepository) {
+//        return args -> {
+//            taskRepository.save(new TaskEntity("Task 1", "Description 1", TaskStatus.TODO, LocalDateTime.now()));
+//            taskRepository.save(new TaskEntity("Task 2", "Description 2", TaskStatus.TODO, LocalDateTime.now()));
+//            taskRepository.save(new TaskEntity("Task 3", "Description 3", TaskStatus.TODO, LocalDateTime.now()));
+//        };
+//    }
 }
