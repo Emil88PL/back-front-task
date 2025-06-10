@@ -51,6 +51,10 @@ public class TaskService {
             task.setDescription(updateTaskDto.getDescription());
         }
 
+        if(updateTaskDto.getStatus() != null) {
+            task.setStatus(updateTaskDto.getStatus());
+        }
+
         if(updateTaskDto.getDueDateTime() != null) {
             task.setDueDateTime(updateTaskDto.getDueDateTime());
         }
