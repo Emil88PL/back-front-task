@@ -25,8 +25,7 @@ public class TaskEntity {
     public TaskEntity() {
     }
 
-    public TaskEntity(Long id, String title, String description, TaskStatus status, LocalDateTime dueDateTime) {
-        this.id = id;
+    public TaskEntity(String title, String description, TaskStatus status, LocalDateTime dueDateTime) {
         this.title = title;
         this.description = description;
         this.status = status;

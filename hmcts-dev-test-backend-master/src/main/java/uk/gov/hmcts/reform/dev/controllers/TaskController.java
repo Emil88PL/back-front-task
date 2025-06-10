@@ -1,13 +1,14 @@
 package uk.gov.hmcts.reform.dev.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.reform.dev.entity.TaskEntity;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.service.TaskService;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("api/v1/tasks")
 public class TaskController {
 
     private final TaskService taskService;
@@ -15,6 +16,12 @@ public class TaskController {
     @Autowired
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskEntity createTask(@RequestBody TaskEntity task) {
+        return taskService.createTask(task);
     }
 
     @GetMapping("/{id}")

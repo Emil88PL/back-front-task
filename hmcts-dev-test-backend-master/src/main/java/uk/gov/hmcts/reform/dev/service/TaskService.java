@@ -35,5 +35,8 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
+    public TaskEntity createTask(TaskEntity task) {
+        return taskRepository.save(task);
+    }
 
 }
