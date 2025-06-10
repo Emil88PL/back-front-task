@@ -26,9 +26,9 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    public TaskEntity updateTaskStatus(Long id, TaskStatus status) {
-        TaskEntity task = getTaskById(id);
-        task.setStatus(status);
+    public TaskEntity updateTaskStatus(Long id, TaskStatus newStatus) {
+        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+        task.setStatus(newStatus);
         return taskRepository.save(task);
     }
 
