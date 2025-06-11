@@ -1,65 +1,21 @@
 package uk.gov.hmcts.reform.dev.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.entity.TaskEntity;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
-import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
-import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 
-@Service
-public class TaskService {
+public interface TaskService {
 
-    private final TaskRepository taskRepository;
+    TaskEntity getTaskById(Long id);
 
-    @Autowired
-    public TaskService(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
+    Iterable<TaskEntity> getAllTasks();
 
-    public TaskEntity getTaskById(Long id) {
-        return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-    }
+    TaskEntity updateTaskStatus(Long id, TaskStatus newStatus);
 
-    public Iterable<TaskEntity> getAllTasks() {
-        return taskRepository.findAll();
-    }
+    void deleteTask(Long id);
 
-    public TaskEntity updateTaskStatus(Long id, TaskStatus newStatus) {
-        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-        task.setStatus(newStatus);
-        return taskRepository.save(task);
-    }
+    TaskEntity createTask(TaskEntity task);
 
-    public void deleteTask(Long id) {
-        taskRepository.deleteById(id);
-    }
-
-    public TaskEntity createTask(TaskEntity task) {
-        return taskRepository.save(task);
-    }
-
-    public TaskEntity updateTask(Long id, UpdateTaskDto updateTaskDto) {
-        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-
-        if(updateTaskDto.getTitle() != null) {
-            task.setTitle(updateTaskDto.getTitle());
-        }
-
-        if(updateTaskDto.getDescription() != null) {
-            task.setDescription(updateTaskDto.getDescription());
-        }
-
-        if(updateTaskDto.getStatus() != null) {
-            task.setStatus(updateTaskDto.getStatus());
-        }
-
-        if(updateTaskDto.getDueDateTime() != null) {
-            task.setDueDateTime(updateTaskDto.getDueDateTime());
-        }
-
-        return taskRepository.save(task);
-    }
+    TaskEntity updateTask(Long id, UpdateTaskDto updateTaskDto);
 
 }
