@@ -21,35 +21,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskEntity getTaskById(Long id) {
-        return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-    }
-
-    @Override
-    public List<TaskEntity> getAllTasksSortedByDueDateTime() {
-        return taskRepository.findAllByOrderByDueDateTimeDesc();
-    }
-
-    @Override
-    public Iterable<TaskEntity> getAllTasks() {
-        return taskRepository.findAll();
-    }
-
-    @Override
-    public TaskEntity updateTaskStatus(Long id, TaskStatus newStatus) {
-        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-        task.setStatus(newStatus);
-        return taskRepository.save(task);
-    }
-
-    @Override
-    public void deleteTask(Long id) {
-        taskRepository.deleteById(id);
-    }
-
-    @Override
     public TaskEntity createTask(TaskEntity task) {
         return taskRepository.save(task);
+    }
+
+    @Override
+    public TaskEntity getTaskById(Long id) {
+        return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
     }
 
     @Override
@@ -73,5 +51,27 @@ public class TaskServiceImpl implements TaskService {
         }
 
         return taskRepository.save(task);
+    }
+
+    @Override
+    public Iterable<TaskEntity> getAllTasks() {
+        return taskRepository.findAll();
+    }
+
+    @Override
+    public List<TaskEntity> getAllTasksSortedByDueDateTime() {
+        return taskRepository.findAllByOrderByDueDateTimeDesc();
+    }
+
+    @Override
+    public TaskEntity updateTaskStatus(Long id, TaskStatus newStatus) {
+        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+        task.setStatus(newStatus);
+        return taskRepository.save(task);
+    }
+
+    @Override
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
     }
 }

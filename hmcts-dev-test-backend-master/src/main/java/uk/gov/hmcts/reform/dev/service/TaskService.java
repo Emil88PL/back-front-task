@@ -8,18 +8,18 @@ import java.util.List;
 
 public interface TaskService {
 
+    TaskEntity createTask(TaskEntity task);
+
     TaskEntity getTaskById(Long id);
 
-    List<TaskEntity> getAllTasksSortedByDueDateTime();
+    TaskEntity updateTask(Long id, UpdateTaskDto updateTaskDto);
 
     Iterable<TaskEntity> getAllTasks();
+
+    List<TaskEntity> getAllTasksSortedByDueDateTime();
 
     TaskEntity updateTaskStatus(Long id, TaskStatus newStatus);
 
     void deleteTask(Long id);
-
-    TaskEntity createTask(TaskEntity task);
-
-    TaskEntity updateTask(Long id, UpdateTaskDto updateTaskDto);
 
 }

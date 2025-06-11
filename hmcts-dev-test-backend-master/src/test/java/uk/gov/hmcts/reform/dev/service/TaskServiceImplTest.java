@@ -5,12 +5,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.entity.TaskEntity;
+import uk.gov.hmcts.reform.dev.entity.TaskStatus;
+import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TaskServiceImplTest {
@@ -23,15 +28,206 @@ class TaskServiceImplTest {
 
     @Test
     void shouldCreateTaskSuccessfully() {
-
+        // Given
         TaskEntity task = new TaskEntity();
         task.setTitle("Test Task");
+        task.setDescription("Test Description");
+        task.setStatus(TaskStatus.TODO);
         when(taskRepository.save(task)).thenReturn(task);
 
+        // When
         TaskEntity result = taskService.createTask(task);
 
-        assertNotNull(result);
-        assertEquals("Test Task", result.getTitle());
+        // Then
+        assertNotNull(result, "Created task should not be null");
+        assertEquals("Test Task", result.getTitle(), "Task title should match");
+        assertEquals("Test Description", result.getDescription(), "Task description should match");
+        assertEquals(TaskStatus.TODO, result.getStatus(), "Task status should match");
         verify(taskRepository).save(task);
     }
+
+    @Test
+    void shouldThrowTaskNotFoundExceptionWhenTaskDoesNotExist() {
+        // Given
+        Long taskId = 1L;
+        when(taskRepository.findById(taskId)).thenReturn(Optional.empty());
+
+        // When & Then
+        TaskNotFoundException exception = assertThrows(TaskNotFoundException.class,
+                                                       () -> taskService.getTaskById(taskId),
+                                                       "Should throw TaskNotFoundException for non-existent task");
+        assertEquals("Task not found with id: " + taskId, exception.getMessage(),
+                     "Exception message should match");
+        verify(taskRepository).findById(taskId);
+    }
+
+    @Test
+    void shouldUpdateTaskSuccessfully() {
+        // Given
+        TaskEntity existingTask = new TaskEntity();
+        existingTask.setId(1L);
+        existingTask.setTitle("Test Task");
+        existingTask.setDescription("Original Description");
+        existingTask.setStatus(TaskStatus.TODO);
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.save(any(TaskEntity.class))).thenReturn(existingTask);
+
+        UpdateTaskDto updateTaskDto = new UpdateTaskDto();
+        updateTaskDto.setTitle("Updated Task");
+
+        // When
+        TaskEntity result = taskService.updateTask(1L, updateTaskDto);
+
+        // Then
+        assertNotNull(result, "Updated task should not be null");
+        assertEquals("Updated Task", result.getTitle(), "Task title should be updated");
+        assertEquals("Original Description", result.getDescription(), "Description should remain unchanged");
+        assertEquals(TaskStatus.TODO, result.getStatus(), "Status should remain unchanged");
+        verify(taskRepository).findById(1L);
+        verify(taskRepository).save(existingTask);
+    }
+
+    @Test
+    void shouldUpdateOnlyTitleWhenOtherFieldsAreNull() {
+        // Given
+        Long taskId = 1L;
+        TaskEntity existingTask = new TaskEntity();
+        existingTask.setId(taskId);
+        existingTask.setTitle("Old Title");
+        existingTask.setDescription("Old Description");
+        existingTask.setStatus(TaskStatus.TODO);
+
+        UpdateTaskDto updateDto = new UpdateTaskDto();
+        updateDto.setTitle("New Title");
+        // description and status are null
+
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.save(existingTask)).thenAnswer(invocation -> {
+            TaskEntity task = invocation.getArgument(0);
+            task.setTitle("New Title");
+            return task;
+        });
+
+        // When
+        TaskEntity result = taskService.updateTask(taskId, updateDto);
+
+        // Then
+        assertNotNull(result, "Updated task should not be null");
+        assertEquals("New Title", result.getTitle(), "Task title should be updated");
+        assertEquals("Old Description", result.getDescription(), "Description should remain unchanged");
+        assertEquals(TaskStatus.TODO, result.getStatus(), "Status should remain unchanged");
+        verify(taskRepository).findById(taskId);
+        verify(taskRepository).save(existingTask);
+    }
+
+    @Test
+    void shouldUpdateTaskTitleDescriptionAndStatus() {
+        // Given
+        Long taskId = 1L;
+        TaskEntity existingTask = new TaskEntity();
+        existingTask.setId(taskId);
+        existingTask.setTitle("Old Title");
+        existingTask.setDescription("Old Description");
+        existingTask.setStatus(TaskStatus.TODO);
+
+        UpdateTaskDto updateDto = new UpdateTaskDto();
+        updateDto.setTitle("New Title");
+        updateDto.setDescription("New Description");
+        updateDto.setStatus(TaskStatus.DONE);
+
+        TaskEntity updatedTask = new TaskEntity();
+        updatedTask.setId(taskId);
+        updatedTask.setTitle("New Title");
+        updatedTask.setDescription("New Description");
+        updatedTask.setStatus(TaskStatus.DONE);
+
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.save(existingTask)).thenReturn(updatedTask);
+
+        // When
+        TaskEntity result = taskService.updateTask(taskId, updateDto);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("New Title", result.getTitle());
+        assertEquals("New Description", result.getDescription());
+        assertEquals(TaskStatus.DONE, result.getStatus());
+        verify(taskRepository).findById(taskId);
+        verify(taskRepository).save(existingTask);
+    }
+
+    @Test
+    void shouldUpdateTaskStatusSuccessfully() {
+        // Given
+        Long taskId = 1L;
+        TaskEntity existingTask = new TaskEntity();
+        existingTask.setId(taskId);
+        existingTask.setStatus(TaskStatus.TODO);
+
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.save(existingTask)).thenReturn(existingTask);
+
+        // When
+        TaskEntity result = taskService.updateTaskStatus(taskId, TaskStatus.IN_PROGRESS);
+
+        // Then
+        assertNotNull(result, "Updated task should not be null");
+        assertEquals(TaskStatus.IN_PROGRESS, result.getStatus(), "Status should be updated");
+        verify(taskRepository).findById(taskId);
+        verify(taskRepository).save(existingTask);
+    }
+
+    @Test
+    void shouldThrowTaskNotFoundExceptionWhenUpdatingStatus() {
+        // Given
+        Long taskId = 99L;
+        when(taskRepository.findById(taskId)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(TaskNotFoundException.class, () -> taskService.updateTaskStatus(taskId, TaskStatus.DONE));
+        verify(taskRepository).findById(taskId);
+    }
+
+    @Test
+    void shouldReturnAllTasks() {
+        // Given
+        List<TaskEntity> tasks = List.of(new TaskEntity(), new TaskEntity());
+        when(taskRepository.findAll()).thenReturn(tasks);
+
+        // When
+        Iterable<TaskEntity> result = taskService.getAllTasks();
+
+        // Then
+        assertNotNull(result);
+        assertIterableEquals(tasks, result);
+        verify(taskRepository).findAll();
+    }
+
+    @Test
+    void shouldReturnAllTasksSortedByDueDateTime() {
+        // Given
+        List<TaskEntity> sortedTasks = List.of(new TaskEntity(), new TaskEntity());
+        when(taskRepository.findAllByOrderByDueDateTimeDesc()).thenReturn(sortedTasks);
+
+        // When
+        List<TaskEntity> result = taskService.getAllTasksSortedByDueDateTime();
+
+        // Then
+        assertNotNull(result);
+        assertEquals(sortedTasks, result);
+        verify(taskRepository).findAllByOrderByDueDateTimeDesc();
+    }
+
+    @Test
+    void shouldDeleteTaskSuccessfully() {
+        // Given
+        Long taskId = 1L;
+
+        // When
+        taskService.deleteTask(taskId);
+
+        // Then
+        verify(taskRepository).deleteById(taskId);
+    }
+
 }
