@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.dev.dtos;
 
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
-
 import java.time.LocalDateTime;
 
 public class UpdateTaskDto {

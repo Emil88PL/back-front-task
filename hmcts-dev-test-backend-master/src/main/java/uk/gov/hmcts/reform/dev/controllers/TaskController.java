@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.dev.controllers;
 
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

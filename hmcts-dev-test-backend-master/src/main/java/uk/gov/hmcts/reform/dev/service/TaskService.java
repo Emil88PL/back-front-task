@@ -9,6 +9,7 @@ import java.util.List;
 public interface TaskService {
 
     TaskEntity getTaskById(Long id);
+
     List<TaskEntity> getAllTasksSortedByDueDateTime();
 
     Iterable<TaskEntity> getAllTasks();
