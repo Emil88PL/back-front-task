@@ -4,9 +4,12 @@ import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.entity.TaskEntity;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 
+import java.util.List;
+
 public interface TaskService {
 
     TaskEntity getTaskById(Long id);
+    List<TaskEntity> getAllTasksSortedByDueDateTime();
 
     Iterable<TaskEntity> getAllTasks();
 

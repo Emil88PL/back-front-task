@@ -8,6 +8,8 @@ import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 
+import java.util.List;
+
 @Service
 public class TaskServiceImpl implements TaskService {
 
@@ -21,6 +23,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskEntity getTaskById(Long id) {
         return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+    }
+
+    @Override
+    public List<TaskEntity> getAllTasksSortedByDueDateTime() {
+        return taskRepository.findAllByOrderByDueDateTimeDesc();
     }
 
     @Override

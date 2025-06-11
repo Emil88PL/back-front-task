@@ -33,7 +33,7 @@ public class TaskController {
 
     @GetMapping
     public Iterable<TaskEntity> getAllTasks() {
-        return taskService.getAllTasks();
+        return taskService.getAllTasksSortedByDueDateTime();
     }
 
     @PutMapping("{id}")
