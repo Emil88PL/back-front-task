@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.service.TaskService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:6969")
 @RequestMapping("api/v1/tasks")
 public class TaskController {
 
