@@ -22,14 +22,21 @@ public class TaskEntity {
 
     private LocalDateTime dueDateTime;
 
+    private LocalDateTime createdDate;
+
     public TaskEntity() {
     }
 
-    public TaskEntity(String title, String description, TaskStatus status, LocalDateTime dueDateTime) {
+    public TaskEntity(String title,
+                      String description,
+                      TaskStatus status,
+                      LocalDateTime dueDateTime,
+                      LocalDateTime createdDate) {
         this.title = title;
         this.description = description;
         this.status = status;
         this.dueDateTime = dueDateTime;
+        this.createdDate = createdDate;
     }
 
     public Long getId() {
@@ -72,6 +79,14 @@ public class TaskEntity {
         this.dueDateTime = dueDateTime;
     }
 
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,12 +95,15 @@ public class TaskEntity {
         return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(
             description,
             that.description
-        ) && status == that.status && Objects.equals(dueDateTime, that.dueDateTime);
+        ) && status == that.status && Objects.equals(dueDateTime, that.dueDateTime) && Objects.equals(
+            createdDate,
+            that.createdDate
+        );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, status, dueDateTime);
+        return Objects.hash(id, title, description, status, dueDateTime, createdDate);
     }
 
     @Override
@@ -96,6 +114,7 @@ public class TaskEntity {
             ", description='" + description + '\'' +
             ", status=" + status +
             ", dueDateTime=" + dueDateTime +
+            ", createdDate=" + createdDate +
             '}';
     }
 }
