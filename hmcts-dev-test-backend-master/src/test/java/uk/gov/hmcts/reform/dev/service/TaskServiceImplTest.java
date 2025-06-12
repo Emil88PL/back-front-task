@@ -207,7 +207,7 @@ class TaskServiceImplTest {
     void shouldReturnAllTasksSortedByDueDateTime() {
         // Given
         List<TaskEntity> sortedTasks = List.of(new TaskEntity(), new TaskEntity());
-        when(taskRepository.findAllByOrderByDueDateTimeDesc()).thenReturn(sortedTasks);
+        when(taskRepository.findAllByOrderByDueDateTimeAsc()).thenReturn(sortedTasks);
 
         // When
         List<TaskEntity> result = taskService.getAllTasksSortedByDueDateTime();
@@ -215,7 +215,7 @@ class TaskServiceImplTest {
         // Then
         assertNotNull(result);
         assertEquals(sortedTasks, result);
-        verify(taskRepository).findAllByOrderByDueDateTimeDesc();
+        verify(taskRepository).findAllByOrderByDueDateTimeAsc();
     }
 
     @Test

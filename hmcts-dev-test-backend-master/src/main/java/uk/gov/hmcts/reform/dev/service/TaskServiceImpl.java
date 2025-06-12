@@ -65,7 +65,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskEntity> getAllTasksSortedByDueDateTime() {
-        return taskRepository.findAllByOrderByDueDateTimeDesc();
+        return taskRepository.findAllByOrderByDueDateTimeAsc();
     }
 
     @Override
