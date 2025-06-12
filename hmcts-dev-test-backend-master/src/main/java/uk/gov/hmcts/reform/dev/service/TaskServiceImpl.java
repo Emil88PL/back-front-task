@@ -22,6 +22,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskEntity createTask(TaskEntity task) {
+        if(task.getStatus() == null) {
+            task.setStatus(TaskStatus.TODO);
+        }
         return taskRepository.save(task);
     }
 
