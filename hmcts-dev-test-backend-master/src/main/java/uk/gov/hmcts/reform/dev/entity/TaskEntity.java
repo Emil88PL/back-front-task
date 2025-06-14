@@ -1,10 +1,7 @@
 package uk.gov.hmcts.reform.dev.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -16,22 +13,15 @@ public class TaskEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Title cannot be empty")
-    @Size(max = 50, message = "Title cannot exceed 50 characters")
     private String title;
 
-    @Size(max = 200, message = "Description cannot exceed 200 characters")
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "Tasks status is required")
     private TaskStatus status;
 
-    @FutureOrPresent(message = "Due date must be today or in the future")
-    @NotNull(message = "Due date is mandatory")
     private Instant dueDateTime;
 
-    @NotNull(message = "Created date is mandatory")
     private Instant createdDate;
 
     public TaskEntity() {

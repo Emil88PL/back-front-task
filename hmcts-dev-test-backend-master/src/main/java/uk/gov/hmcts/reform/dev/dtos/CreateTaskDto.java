@@ -7,7 +7,7 @@ import java.time.Instant;
 
 public class CreateTaskDto {
 
-    @NotNull(message = "Title cannot be empty")
+    @NotBlank(message = "Title cannot be empty")
     @Size(max = 50, message = "Title cannot exceed 50 characters")
     private String title;
 
@@ -17,7 +17,7 @@ public class CreateTaskDto {
     @NotNull(message = "Tasks status is required")
     private TaskStatus status;
 
-    @FutureOrPresent(message = "Due date must be today or in the future")
+    @FutureOrPresent(message = "Due date must be in the future")
     @NotNull(message = "Due date is mandatory")
     private Instant dueDateTime;
 
