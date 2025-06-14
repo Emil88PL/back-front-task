@@ -24,4 +24,5 @@ public interface TaskService {
 
     void deleteTask(Long id);
 
+    void deleteAllTasks();
 }

@@ -55,4 +55,10 @@ public class TaskController {
         taskService.deleteTask(id);
     }
 
+
+    @DeleteMapping("/delete-all")
+    public void deleteAllTasks() {
+        taskService.deleteAllTasks();
+    }
+
 }
