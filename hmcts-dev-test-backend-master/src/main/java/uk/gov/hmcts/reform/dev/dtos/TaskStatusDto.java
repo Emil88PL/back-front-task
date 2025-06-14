@@ -1,15 +1,16 @@
 package uk.gov.hmcts.reform.dev.dtos;
 
+import uk.gov.hmcts.reform.dev.entity.TaskStatus;
+
 public class TaskStatusDto {
 
-    private String status;
+    private TaskStatus status;
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
-
 }

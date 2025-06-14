@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.dev.service;
 
+import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
+import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.entity.TaskEntity;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
@@ -8,7 +10,7 @@ import java.util.List;
 
 public interface TaskService {
 
-    TaskEntity createTask(TaskEntity task);
+    TaskEntity createTask(CreateTaskDto taskDto);
 
     TaskEntity getTaskById(Long id);
 
@@ -18,7 +20,7 @@ public interface TaskService {
 
     List<TaskEntity> getAllTasksSortedByDueDateTime();
 
-    TaskEntity updateTaskStatus(Long id, TaskStatus newStatus);
+    TaskEntity updateTaskStatus(Long id, TaskStatusDto newStatusDto);
 
     void deleteTask(Long id);
 

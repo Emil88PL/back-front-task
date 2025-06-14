@@ -2,6 +2,9 @@ package uk.gov.hmcts.reform.dev.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
+import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.entity.TaskEntity;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
@@ -12,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Validated
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
@@ -21,14 +25,18 @@ public class TaskServiceImpl implements TaskService {
         this.taskRepository = taskRepository;
     }
 
-    @Override
-    public TaskEntity createTask(TaskEntity task) {
-        if(task.getStatus() == null) {
-            task.setStatus(TaskStatus.TODO);
-        }
+
+    public TaskEntity createTask(CreateTaskDto taskDto) {
+        TaskEntity task = new TaskEntity();
+        task.setTitle(taskDto.getTitle());
+        task.setDescription(taskDto.getDescription());
+        task.setStatus(taskDto.getStatus());
+        task.setDueDateTime(taskDto.getDueDateTime());
         task.setCreatedDate(LocalDateTime.now());
         return taskRepository.save(task);
     }
+
+
 
     @Override
     public TaskEntity getTaskById(Long id) {
@@ -69,9 +77,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskEntity updateTaskStatus(Long id, TaskStatus newStatus) {
+    public TaskEntity updateTaskStatus(Long id, TaskStatusDto newStatusDto) {
         TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-        task.setStatus(newStatus);
+        task.setStatus(newStatusDto.getStatus());
         return taskRepository.save(task);
     }
 

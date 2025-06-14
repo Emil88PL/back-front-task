@@ -3,11 +3,13 @@ package uk.gov.hmcts.reform.dev.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.entity.TaskEntity;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.service.TaskService;
+import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:6969")
@@ -23,8 +25,8 @@ public class TaskController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TaskEntity createTask(@RequestBody TaskEntity task) {
-        return taskService.createTask(task);
+    public TaskEntity createTask(@Valid @RequestBody CreateTaskDto taskDto) {
+        return taskService.createTask(taskDto);
     }
 
     @GetMapping("/{id}")
@@ -44,8 +46,8 @@ public class TaskController {
 
     @PutMapping("{id}/status")
     public TaskEntity updateTaskStatus(@PathVariable Long id, @RequestBody TaskStatusDto newStatusDto) {
-        TaskStatus newStatus = TaskStatus.valueOf(newStatusDto.getStatus());
-        return taskService.updateTaskStatus(id, newStatus);
+
+        return taskService.updateTaskStatus(id, newStatusDto);
     }
 
     @DeleteMapping("{id}")

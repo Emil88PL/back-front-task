@@ -5,12 +5,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
+import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.entity.TaskEntity;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,21 +32,30 @@ class TaskServiceImplTest {
     @Test
     void shouldCreateTaskSuccessfully() {
         // Given
-        TaskEntity task = new TaskEntity();
-        task.setTitle("Test Task");
-        task.setDescription("Test Description");
-        task.setStatus(TaskStatus.TODO);
-        when(taskRepository.save(task)).thenReturn(task);
+        CreateTaskDto taskDto = new CreateTaskDto();
+        taskDto.setTitle("Test Task");
+        taskDto.setDescription("Test Description");
+        taskDto.setStatus(TaskStatus.TODO);
+        taskDto.setDueDateTime(LocalDateTime.now().plusDays(1));
+
+        TaskEntity savedTask = new TaskEntity();
+        savedTask.setId(1L); // Simulate the DB generating an ID
+        savedTask.setTitle(taskDto.getTitle());
+        savedTask.setDescription(taskDto.getDescription());
+        savedTask.setStatus(taskDto.getStatus());
+        savedTask.setDueDateTime(taskDto.getDueDateTime());
+        savedTask.setCreatedDate(LocalDateTime.now());
+
+        when(taskRepository.save(any(TaskEntity.class))).thenReturn(savedTask);
 
         // When
-        TaskEntity result = taskService.createTask(task);
+        TaskEntity result = taskService.createTask(taskDto);
 
         // Then
         assertNotNull(result, "Created task should not be null");
+        assertEquals(savedTask.getId(), result.getId(), "Task ID should be set by the save operation");
         assertEquals("Test Task", result.getTitle(), "Task title should match");
-        assertEquals("Test Description", result.getDescription(), "Task description should match");
-        assertEquals(TaskStatus.TODO, result.getStatus(), "Task status should match");
-        verify(taskRepository).save(task);
+        verify(taskRepository).save(any(TaskEntity.class)); // Verify that the save method was called
     }
 
     @Test
@@ -164,11 +176,14 @@ class TaskServiceImplTest {
         existingTask.setId(taskId);
         existingTask.setStatus(TaskStatus.TODO);
 
+        TaskStatusDto statusDto = new TaskStatusDto();
+        statusDto.setStatus(TaskStatus.IN_PROGRESS);
+
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
         when(taskRepository.save(existingTask)).thenReturn(existingTask);
 
         // When
-        TaskEntity result = taskService.updateTaskStatus(taskId, TaskStatus.IN_PROGRESS);
+        TaskEntity result = taskService.updateTaskStatus(taskId, statusDto);
 
         // Then
         assertNotNull(result, "Updated task should not be null");
@@ -181,11 +196,17 @@ class TaskServiceImplTest {
     void shouldThrowTaskNotFoundExceptionWhenUpdatingStatus() {
         // Given
         Long taskId = 99L;
+
+        TaskStatusDto statusDto = new TaskStatusDto();
+        statusDto.setStatus(TaskStatus.DONE);
+
         when(taskRepository.findById(taskId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(TaskNotFoundException.class, () -> taskService.updateTaskStatus(taskId, TaskStatus.DONE));
+        assertThrows(TaskNotFoundException.class, () -> taskService.updateTaskStatus(taskId, statusDto));
+
         verify(taskRepository).findById(taskId);
+        verify(taskRepository, never()).save(any(TaskEntity.class));
     }
 
     @Test

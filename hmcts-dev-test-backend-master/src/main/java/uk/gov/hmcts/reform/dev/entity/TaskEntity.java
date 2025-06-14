@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -26,11 +27,11 @@ public class TaskEntity {
     @NotNull(message = "Tasks status is required")
     private TaskStatus status;
 
-    @NotNull(message = "Created date is mandatory")
-    private LocalDateTime dueDateTime;
-
     @FutureOrPresent(message = "Due date must be today or in the future")
     @NotNull(message = "Due date is mandatory")
+    private LocalDateTime dueDateTime;
+
+    @NotNull(message = "Created date is mandatory")
     private LocalDateTime createdDate;
 
     public TaskEntity() {
@@ -76,7 +77,7 @@ public class TaskEntity {
         return status;
     }
 
-    public void setStatus(TaskStatus status) {
+    public void setStatus(@NotNull(message = "Tasks status is required") TaskStatus status) {
         this.status = status;
     }
 
