@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.dev.dtos;
 import jakarta.validation.constraints.*;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class CreateTaskDto {
 
@@ -19,7 +19,7 @@ public class CreateTaskDto {
 
     @FutureOrPresent(message = "Due date must be today or in the future")
     @NotNull(message = "Due date is mandatory")
-    private LocalDateTime dueDateTime;
+    private Instant dueDateTime;
 
     public String getTitle() {
         return title;
@@ -45,11 +45,11 @@ public class CreateTaskDto {
         this.status = status;
     }
 
-    public LocalDateTime getDueDateTime() {
+    public Instant getDueDateTime() {
         return dueDateTime;
     }
 
-    public void setDueDateTime(LocalDateTime dueDateTime) {
+    public void setDueDateTime(Instant dueDateTime) {
         this.dueDateTime = dueDateTime;
     }
 }

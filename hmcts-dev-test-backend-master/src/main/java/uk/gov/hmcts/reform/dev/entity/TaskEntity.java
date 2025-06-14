@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -29,10 +29,10 @@ public class TaskEntity {
 
     @FutureOrPresent(message = "Due date must be today or in the future")
     @NotNull(message = "Due date is mandatory")
-    private LocalDateTime dueDateTime;
+    private Instant dueDateTime;
 
     @NotNull(message = "Created date is mandatory")
-    private LocalDateTime createdDate;
+    private Instant createdDate;
 
     public TaskEntity() {
     }
@@ -40,8 +40,8 @@ public class TaskEntity {
     public TaskEntity(String title,
                       String description,
                       TaskStatus status,
-                      LocalDateTime dueDateTime,
-                      LocalDateTime createdDate) {
+                      Instant dueDateTime,
+                      Instant createdDate) {
         this.title = title;
         this.description = description;
         this.status = status;
@@ -81,19 +81,19 @@ public class TaskEntity {
         this.status = status;
     }
 
-    public LocalDateTime getDueDateTime() {
+    public Instant getDueDateTime() {
         return dueDateTime;
     }
 
-    public void setDueDateTime(LocalDateTime dueDateTime) {
+    public void setDueDateTime(Instant dueDateTime) {
         this.dueDateTime = dueDateTime;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public Instant getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(Instant createdDate) {
         this.createdDate = createdDate;
     }
 

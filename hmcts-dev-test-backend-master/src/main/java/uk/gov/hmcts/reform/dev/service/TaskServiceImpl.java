@@ -11,7 +11,7 @@ import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -32,7 +32,7 @@ public class TaskServiceImpl implements TaskService {
         task.setDescription(taskDto.getDescription());
         task.setStatus(taskDto.getStatus());
         task.setDueDateTime(taskDto.getDueDateTime());
-        task.setCreatedDate(LocalDateTime.now());
+        task.setCreatedDate(Instant.now());
         return taskRepository.save(task);
     }
 

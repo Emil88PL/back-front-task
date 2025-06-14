@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,8 @@ class TaskServiceImplTest {
         taskDto.setTitle("Test Task");
         taskDto.setDescription("Test Description");
         taskDto.setStatus(TaskStatus.TODO);
-        taskDto.setDueDateTime(LocalDateTime.now().plusDays(1));
+        // add one day to a Instant date
+        taskDto.setDueDateTime(Instant.now().plus(1, java.time.temporal.ChronoUnit.DAYS));
 
         TaskEntity savedTask = new TaskEntity();
         savedTask.setId(1L); // Simulate the DB generating an ID
@@ -44,7 +46,7 @@ class TaskServiceImplTest {
         savedTask.setDescription(taskDto.getDescription());
         savedTask.setStatus(taskDto.getStatus());
         savedTask.setDueDateTime(taskDto.getDueDateTime());
-        savedTask.setCreatedDate(LocalDateTime.now());
+        savedTask.setCreatedDate(Instant.now());
 
         when(taskRepository.save(any(TaskEntity.class))).thenReturn(savedTask);
 
