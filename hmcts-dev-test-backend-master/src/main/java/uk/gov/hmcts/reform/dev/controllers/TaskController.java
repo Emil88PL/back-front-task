@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.dev.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
@@ -40,7 +41,7 @@ public class TaskController {
     }
 
     @PutMapping("{id}")
-    public TaskEntity updateTask(@PathVariable Long id, @RequestBody UpdateTaskDto updateTaskDto) {
+    public TaskEntity updateTask(@PathVariable Long id, @Validated @RequestBody UpdateTaskDto updateTaskDto) {
         return taskService.updateTask(id, updateTaskDto);
     }
 
