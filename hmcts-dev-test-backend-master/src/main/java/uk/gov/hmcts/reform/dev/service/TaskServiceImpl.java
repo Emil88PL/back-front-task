@@ -79,7 +79,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskEntity updateTaskStatus(Long id, TaskStatusDto newStatusDto) {
         TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-        task.setStatus(newStatusDto.getStatus());
+        task.setStatus(newStatusDto.toEnum());
         return taskRepository.save(task);
     }
 

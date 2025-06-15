@@ -46,7 +46,7 @@ public class TaskController {
     }
 
     @PutMapping("{id}/status")
-    public TaskEntity updateTaskStatus(@PathVariable Long id, @RequestBody TaskStatusDto newStatusDto) {
+    public TaskEntity updateTaskStatus(@PathVariable Long id, @Valid @RequestBody TaskStatusDto newStatusDto) {
 
         return taskService.updateTaskStatus(id, newStatusDto);
     }

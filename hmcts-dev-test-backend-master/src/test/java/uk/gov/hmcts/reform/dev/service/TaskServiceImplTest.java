@@ -179,7 +179,7 @@ class TaskServiceImplTest {
         existingTask.setStatus(TaskStatus.TODO);
 
         TaskStatusDto statusDto = new TaskStatusDto();
-        statusDto.setStatus(TaskStatus.IN_PROGRESS);
+        statusDto.setStatus(TaskStatus.IN_PROGRESS.name());
 
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
         when(taskRepository.save(existingTask)).thenReturn(existingTask);
@@ -200,7 +200,7 @@ class TaskServiceImplTest {
         Long taskId = 99L;
 
         TaskStatusDto statusDto = new TaskStatusDto();
-        statusDto.setStatus(TaskStatus.DONE);
+        statusDto.setStatus(TaskStatus.DONE.toString());
 
         when(taskRepository.findById(taskId)).thenReturn(Optional.empty());
 
