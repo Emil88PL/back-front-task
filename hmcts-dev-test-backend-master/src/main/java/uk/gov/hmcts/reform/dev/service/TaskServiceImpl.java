@@ -4,10 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
+import uk.gov.hmcts.reform.dev.dtos.CreateTaskResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
+import uk.gov.hmcts.reform.dev.dtos.TaskStatusResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
+import uk.gov.hmcts.reform.dev.dtos.UpdateTaskResponseDto;
 import uk.gov.hmcts.reform.dev.entity.Task;
+import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
+import uk.gov.hmcts.reform.dev.mappers.TaskMapper;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 import java.time.Instant;
 import java.util.List;
@@ -17,24 +22,24 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
 
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper) {
         this.taskRepository = taskRepository;
+        this.taskMapper = taskMapper;
     }
 
-
-    public Task createTask(CreateTaskDto taskDto) {
+    public CreateTaskResponseDto createTask(CreateTaskDto taskDto) {
         Task task = new Task();
         task.setTitle(taskDto.getTitle());
         task.setDescription(taskDto.getDescription());
         task.setStatus(taskDto.getStatus());
         task.setDueDateTime(taskDto.getDueDateTime());
         task.setCreatedDate(Instant.now());
-        return taskRepository.save(task);
+        taskRepository.save(task);
+        return taskMapper.toCreateTaskResponseDto(task);
     }
-
-
 
     @Override
     public Task getTaskById(Long id) {
@@ -42,7 +47,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task updateTask(Long id, UpdateTaskDto updateTaskDto) {
+    public UpdateTaskResponseDto updateTask(Long id, UpdateTaskDto updateTaskDto) {
         Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
         if (updateTaskDto.getTitle() != null) {
@@ -61,7 +66,8 @@ public class TaskServiceImpl implements TaskService {
             task.setDueDateTime(updateTaskDto.getDueDateTime());
         }
 
-        return taskRepository.save(task);
+        Task savedTask = taskRepository.save(task);
+        return taskMapper.toUpdateTaskResponseDto(savedTask);
     }
 
     @Override
@@ -75,10 +81,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task updateTaskStatus(Long id, TaskStatusDto newStatusDto) {
+    public TaskStatusResponseDto updateTaskStatus(Long id, TaskStatusDto newStatusDto) {
         Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-        task.setStatus(newStatusDto.toEnum());
-        return taskRepository.save(task);
+        TaskStatus newStatus = newStatusDto.toEnum();
+        task.setStatus(newStatus);
+        Task savedTask = taskRepository.save(task);
+        return taskMapper.toTaskStatusResponseDto(savedTask);
     }
 
     @Override

@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.dev.dtos;
 
 import jakarta.validation.constraints.*;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
-
 import java.time.Instant;
 
 public class CreateTaskDto {

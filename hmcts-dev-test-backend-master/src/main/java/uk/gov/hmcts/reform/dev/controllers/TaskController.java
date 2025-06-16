@@ -5,8 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
+import uk.gov.hmcts.reform.dev.dtos.CreateTaskResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
+import uk.gov.hmcts.reform.dev.dtos.TaskStatusResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
+import uk.gov.hmcts.reform.dev.dtos.UpdateTaskResponseDto;
 import uk.gov.hmcts.reform.dev.entity.Task;
 import uk.gov.hmcts.reform.dev.service.TaskService;
 import jakarta.validation.Valid;
@@ -25,7 +28,7 @@ public class TaskController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Task createTask(@Valid @RequestBody CreateTaskDto taskDto) {
+    public CreateTaskResponseDto createTask(@Valid @RequestBody CreateTaskDto taskDto) {
         return taskService.createTask(taskDto);
     }
 
@@ -40,13 +43,12 @@ public class TaskController {
     }
 
     @PutMapping("{id}")
-    public Task updateTask(@PathVariable Long id, @Validated @RequestBody UpdateTaskDto updateTaskDto) {
+    public UpdateTaskResponseDto updateTask(@PathVariable Long id, @Validated @RequestBody UpdateTaskDto updateTaskDto) {
         return taskService.updateTask(id, updateTaskDto);
     }
 
     @PutMapping("{id}/status")
-    public Task updateTaskStatus(@PathVariable Long id, @Valid @RequestBody TaskStatusDto newStatusDto) {
-
+    public TaskStatusResponseDto updateTaskStatus(@PathVariable Long id, @Valid @RequestBody TaskStatusDto newStatusDto) {
         return taskService.updateTaskStatus(id, newStatusDto);
     }
 

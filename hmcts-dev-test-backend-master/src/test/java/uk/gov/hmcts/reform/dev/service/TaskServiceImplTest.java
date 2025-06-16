@@ -6,11 +6,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
+import uk.gov.hmcts.reform.dev.dtos.CreateTaskResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
+import uk.gov.hmcts.reform.dev.dtos.TaskStatusResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
+import uk.gov.hmcts.reform.dev.dtos.UpdateTaskResponseDto;
 import uk.gov.hmcts.reform.dev.entity.Task;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
+import uk.gov.hmcts.reform.dev.mappers.TaskMapper;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 import java.time.Instant;
 import java.util.List;
@@ -30,6 +34,9 @@ class TaskServiceImplTest {
     @Mock
     private TaskRepository taskRepository;
 
+    @Mock
+    private TaskMapper taskMapper;
+
     @InjectMocks
     private TaskServiceImpl taskService;
 
@@ -40,27 +47,38 @@ class TaskServiceImplTest {
         taskDto.setTitle("Test Task");
         taskDto.setDescription("Test Description");
         taskDto.setStatus(TaskStatus.TODO);
-        // add one day to a Instant date
         taskDto.setDueDateTime(Instant.now().plus(1, java.time.temporal.ChronoUnit.DAYS));
 
         Task savedTask = new Task();
-        savedTask.setId(1L); // Simulate the DB generating an ID
+        savedTask.setId(1L);
         savedTask.setTitle(taskDto.getTitle());
         savedTask.setDescription(taskDto.getDescription());
         savedTask.setStatus(taskDto.getStatus());
         savedTask.setDueDateTime(taskDto.getDueDateTime());
         savedTask.setCreatedDate(Instant.now());
 
+        CreateTaskResponseDto expectedResponse = new CreateTaskResponseDto();
+        expectedResponse.setId(1L);
+        expectedResponse.setTitle("Test Task");
+        expectedResponse.setDescription("Test Description");
+        expectedResponse.setStatus(TaskStatus.TODO.toString());
+        expectedResponse.setDueDateTime(taskDto.getDueDateTime().toString());
+
+        // Remove the toEntity stubbing since it's not used by the service
         when(taskRepository.save(any(Task.class))).thenReturn(savedTask);
+        when(taskMapper.toCreateTaskResponseDto(any(Task.class))).thenReturn(expectedResponse);
 
         // When
-        Task result = taskService.createTask(taskDto);
+        CreateTaskResponseDto result = taskService.createTask(taskDto);
 
         // Then
         assertNotNull(result, "Created task should not be null");
-        assertEquals(savedTask.getId(), result.getId(), "Task ID should be set by the save operation");
         assertEquals("Test Task", result.getTitle(), "Task title should match");
-        verify(taskRepository).save(any(Task.class)); // Verify that the save method was called
+        assertEquals(1L, result.getId(), "Task ID should match");
+
+        // Remove the toEntity verification since it's not called by the service
+        verify(taskRepository).save(any(Task.class));
+        verify(taskMapper).toCreateTaskResponseDto(any(Task.class));
     }
 
     @Test
@@ -81,27 +99,43 @@ class TaskServiceImplTest {
     @Test
     void shouldUpdateTaskSuccessfully() {
         // Given
+        Long taskId = 1L;
         Task existingTask = new Task();
-        existingTask.setId(1L);
+        existingTask.setId(taskId);
         existingTask.setTitle("Test Task");
         existingTask.setDescription("Original Description");
         existingTask.setStatus(TaskStatus.TODO);
-        when(taskRepository.findById(1L)).thenReturn(Optional.of(existingTask));
-        when(taskRepository.save(any(Task.class))).thenReturn(existingTask);
 
         UpdateTaskDto updateTaskDto = new UpdateTaskDto();
         updateTaskDto.setTitle("Updated Task");
 
+        Task updatedTask = new Task();
+        updatedTask.setId(taskId);
+        updatedTask.setTitle("Updated Task");
+        updatedTask.setDescription("Original Description");
+        updatedTask.setStatus(TaskStatus.TODO);
+
+        UpdateTaskResponseDto expectedResponse = new UpdateTaskResponseDto();
+        expectedResponse.setId(taskId);
+        expectedResponse.setTitle("Updated Task");
+        expectedResponse.setDescription("Original Description");
+        expectedResponse.setStatus(TaskStatus.TODO.toString());
+
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.save(existingTask)).thenReturn(updatedTask);
+        when(taskMapper.toUpdateTaskResponseDto(updatedTask)).thenReturn(expectedResponse);
+
         // When
-        Task result = taskService.updateTask(1L, updateTaskDto);
+        UpdateTaskResponseDto result = taskService.updateTask(taskId, updateTaskDto);
 
         // Then
         assertNotNull(result, "Updated task should not be null");
         assertEquals("Updated Task", result.getTitle(), "Task title should be updated");
         assertEquals("Original Description", result.getDescription(), "Description should remain unchanged");
-        assertEquals(TaskStatus.TODO, result.getStatus(), "Status should remain unchanged");
-        verify(taskRepository).findById(1L);
+        assertEquals(TaskStatus.TODO.toString(), result.getStatus(), "Status should remain unchanged");
+        verify(taskRepository).findById(taskId);
         verify(taskRepository).save(existingTask);
+        verify(taskMapper).toUpdateTaskResponseDto(updatedTask);
     }
 
     @Test
@@ -116,25 +150,34 @@ class TaskServiceImplTest {
 
         UpdateTaskDto updateDto = new UpdateTaskDto();
         updateDto.setTitle("New Title");
-        // description and status are null
+
+        Task updatedTask = new Task();
+        updatedTask.setId(taskId);
+        updatedTask.setTitle("New Title");
+        updatedTask.setDescription("Old Description");
+        updatedTask.setStatus(TaskStatus.TODO);
+
+        UpdateTaskResponseDto expectedResponse = new UpdateTaskResponseDto();
+        expectedResponse.setId(taskId);
+        expectedResponse.setTitle("New Title");
+        expectedResponse.setDescription("Old Description");
+        expectedResponse.setStatus(TaskStatus.TODO.toString());
 
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
-        when(taskRepository.save(existingTask)).thenAnswer(invocation -> {
-            Task task = invocation.getArgument(0);
-            task.setTitle("New Title");
-            return task;
-        });
+        when(taskRepository.save(existingTask)).thenReturn(updatedTask);
+        when(taskMapper.toUpdateTaskResponseDto(updatedTask)).thenReturn(expectedResponse);
 
         // When
-        Task result = taskService.updateTask(taskId, updateDto);
+        UpdateTaskResponseDto result = taskService.updateTask(taskId, updateDto);
 
         // Then
         assertNotNull(result, "Updated task should not be null");
         assertEquals("New Title", result.getTitle(), "Task title should be updated");
         assertEquals("Old Description", result.getDescription(), "Description should remain unchanged");
-        assertEquals(TaskStatus.TODO, result.getStatus(), "Status should remain unchanged");
+        assertEquals(TaskStatus.TODO.toString(), result.getStatus(), "Status should remain unchanged");
         verify(taskRepository).findById(taskId);
         verify(taskRepository).save(existingTask);
+        verify(taskMapper).toUpdateTaskResponseDto(updatedTask);
     }
 
     @Test
@@ -158,19 +201,27 @@ class TaskServiceImplTest {
         updatedTask.setDescription("New Description");
         updatedTask.setStatus(TaskStatus.DONE);
 
+        UpdateTaskResponseDto expectedResponse = new UpdateTaskResponseDto();
+        expectedResponse.setId(taskId);
+        expectedResponse.setTitle("New Title");
+        expectedResponse.setDescription("New Description");
+        expectedResponse.setStatus(TaskStatus.DONE.toString());
+
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
         when(taskRepository.save(existingTask)).thenReturn(updatedTask);
+        when(taskMapper.toUpdateTaskResponseDto(updatedTask)).thenReturn(expectedResponse);
 
         // When
-        Task result = taskService.updateTask(taskId, updateDto);
+        UpdateTaskResponseDto result = taskService.updateTask(taskId, updateDto);
 
         // Then
         assertNotNull(result);
         assertEquals("New Title", result.getTitle());
         assertEquals("New Description", result.getDescription());
-        assertEquals(TaskStatus.DONE, result.getStatus());
+        assertEquals(TaskStatus.DONE.toString(), result.getStatus());
         verify(taskRepository).findById(taskId);
         verify(taskRepository).save(existingTask);
+        verify(taskMapper).toUpdateTaskResponseDto(updatedTask);
     }
 
     @Test
@@ -184,17 +235,27 @@ class TaskServiceImplTest {
         TaskStatusDto statusDto = new TaskStatusDto();
         statusDto.setStatus(TaskStatus.IN_PROGRESS.name());
 
+        Task updatedTask = new Task();
+        updatedTask.setId(taskId);
+        updatedTask.setStatus(TaskStatus.IN_PROGRESS);
+
+        TaskStatusResponseDto expectedResponse = new TaskStatusResponseDto();
+
+        expectedResponse.setStatus(TaskStatus.IN_PROGRESS.toString());
+
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
-        when(taskRepository.save(existingTask)).thenReturn(existingTask);
+        when(taskRepository.save(existingTask)).thenReturn(updatedTask);
+        when(taskMapper.toTaskStatusResponseDto(updatedTask)).thenReturn(expectedResponse);
 
         // When
-        Task result = taskService.updateTaskStatus(taskId, statusDto);
+        TaskStatusResponseDto result = taskService.updateTaskStatus(taskId, statusDto);
 
         // Then
         assertNotNull(result, "Updated task should not be null");
-        assertEquals(TaskStatus.IN_PROGRESS, result.getStatus(), "Status should be updated");
+        assertEquals(TaskStatus.IN_PROGRESS.toString(), result.getStatus(), "Status should be updated");
         verify(taskRepository).findById(taskId);
         verify(taskRepository).save(existingTask);
+        verify(taskMapper).toTaskStatusResponseDto(updatedTask);
     }
 
     @Test
@@ -212,6 +273,7 @@ class TaskServiceImplTest {
 
         verify(taskRepository).findById(taskId);
         verify(taskRepository, never()).save(any(Task.class));
+        verify(taskMapper, never()).toTaskStatusResponseDto(any(Task.class));
     }
 
     @Test
@@ -255,5 +317,4 @@ class TaskServiceImplTest {
         // Then
         verify(taskRepository).deleteById(taskId);
     }
-
 }

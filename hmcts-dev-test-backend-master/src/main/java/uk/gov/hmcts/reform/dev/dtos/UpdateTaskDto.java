@@ -4,7 +4,6 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.springframework.validation.annotation.Validated;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import java.time.Instant;
 
