@@ -3,22 +3,22 @@ package uk.gov.hmcts.reform.dev.service;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
-import uk.gov.hmcts.reform.dev.entity.TaskEntity;
+import uk.gov.hmcts.reform.dev.entity.Task;
 import java.util.List;
 
 public interface TaskService {
 
-    TaskEntity createTask(CreateTaskDto taskDto);
+    Task createTask(CreateTaskDto taskDto);
 
-    TaskEntity getTaskById(Long id);
+    Task getTaskById(Long id);
 
-    TaskEntity updateTask(Long id, UpdateTaskDto updateTaskDto);
+    Task updateTask(Long id, UpdateTaskDto updateTaskDto);
 
-    Iterable<TaskEntity> getAllTasks();
+    Iterable<Task> getAllTasks();
 
-    List<TaskEntity> getAllTasksSortedByDueDateTime();
+    List<Task> getAllTasksSortedByDueDateTime();
 
-    TaskEntity updateTaskStatus(Long id, TaskStatusDto newStatusDto);
+    Task updateTaskStatus(Long id, TaskStatusDto newStatusDto);
 
     void deleteTask(Long id);
 

@@ -1,14 +1,6 @@
 package uk.gov.hmcts.reform.dev.configuration;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.reform.dev.entity.TaskEntity;
-import uk.gov.hmcts.reform.dev.entity.TaskStatus;
-import uk.gov.hmcts.reform.dev.repository.TaskRepository;
-import uk.gov.hmcts.reform.dev.service.TaskService;
-
-import java.time.LocalDateTime;
 
 @Configuration
 public class DataInitializer {

@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
-import uk.gov.hmcts.reform.dev.entity.TaskEntity;
+import uk.gov.hmcts.reform.dev.entity.Task;
 import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 import java.time.Instant;
@@ -24,8 +24,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
 
-    public TaskEntity createTask(CreateTaskDto taskDto) {
-        TaskEntity task = new TaskEntity();
+    public Task createTask(CreateTaskDto taskDto) {
+        Task task = new Task();
         task.setTitle(taskDto.getTitle());
         task.setDescription(taskDto.getDescription());
         task.setStatus(taskDto.getStatus());
@@ -37,13 +37,13 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public TaskEntity getTaskById(Long id) {
+    public Task getTaskById(Long id) {
         return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
     }
 
     @Override
-    public TaskEntity updateTask(Long id, UpdateTaskDto updateTaskDto) {
-        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+    public Task updateTask(Long id, UpdateTaskDto updateTaskDto) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
         if (updateTaskDto.getTitle() != null) {
             task.setTitle(updateTaskDto.getTitle());
@@ -65,18 +65,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Iterable<TaskEntity> getAllTasks() {
+    public Iterable<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
     @Override
-    public List<TaskEntity> getAllTasksSortedByDueDateTime() {
+    public List<Task> getAllTasksSortedByDueDateTime() {
         return taskRepository.findAllByOrderByDueDateTimeAsc();
     }
 
     @Override
-    public TaskEntity updateTaskStatus(Long id, TaskStatusDto newStatusDto) {
-        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+    public Task updateTaskStatus(Long id, TaskStatusDto newStatusDto) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
         task.setStatus(newStatusDto.toEnum());
         return taskRepository.save(task);
     }

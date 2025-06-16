@@ -1,37 +1,52 @@
 package uk.gov.hmcts.reform.dev.entity;
 
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
 import java.util.Objects;
 
 @Entity
-public class TaskEntity {
+@Table(name = "tasks")
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "title", nullable = false)
     private String title;
 
+    @Column(name = "description")
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private TaskStatus status;
 
+    @Column(name = "due_date")
     private Instant dueDateTime;
 
+    @Column(name = "created_task_date")
     private Instant createdDate;
 
-    public TaskEntity() {
+    public Task() {
     }
 
-    public TaskEntity(String title,
-                      String description,
-                      TaskStatus status,
-                      Instant dueDateTime,
-                      Instant createdDate) {
+    public Task(String title,
+                String description,
+                TaskStatus status,
+                Instant dueDateTime,
+                Instant createdDate) {
         this.title = title;
         this.description = description;
         this.status = status;
@@ -91,7 +106,7 @@ public class TaskEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TaskEntity that = (TaskEntity) o;
+        Task that = (Task) o;
         return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(
             description,
             that.description

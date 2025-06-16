@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
-import uk.gov.hmcts.reform.dev.entity.TaskEntity;
+import uk.gov.hmcts.reform.dev.entity.Task;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
@@ -43,7 +43,7 @@ class TaskServiceImplTest {
         // add one day to a Instant date
         taskDto.setDueDateTime(Instant.now().plus(1, java.time.temporal.ChronoUnit.DAYS));
 
-        TaskEntity savedTask = new TaskEntity();
+        Task savedTask = new Task();
         savedTask.setId(1L); // Simulate the DB generating an ID
         savedTask.setTitle(taskDto.getTitle());
         savedTask.setDescription(taskDto.getDescription());
@@ -51,16 +51,16 @@ class TaskServiceImplTest {
         savedTask.setDueDateTime(taskDto.getDueDateTime());
         savedTask.setCreatedDate(Instant.now());
 
-        when(taskRepository.save(any(TaskEntity.class))).thenReturn(savedTask);
+        when(taskRepository.save(any(Task.class))).thenReturn(savedTask);
 
         // When
-        TaskEntity result = taskService.createTask(taskDto);
+        Task result = taskService.createTask(taskDto);
 
         // Then
         assertNotNull(result, "Created task should not be null");
         assertEquals(savedTask.getId(), result.getId(), "Task ID should be set by the save operation");
         assertEquals("Test Task", result.getTitle(), "Task title should match");
-        verify(taskRepository).save(any(TaskEntity.class)); // Verify that the save method was called
+        verify(taskRepository).save(any(Task.class)); // Verify that the save method was called
     }
 
     @Test
@@ -81,19 +81,19 @@ class TaskServiceImplTest {
     @Test
     void shouldUpdateTaskSuccessfully() {
         // Given
-        TaskEntity existingTask = new TaskEntity();
+        Task existingTask = new Task();
         existingTask.setId(1L);
         existingTask.setTitle("Test Task");
         existingTask.setDescription("Original Description");
         existingTask.setStatus(TaskStatus.TODO);
         when(taskRepository.findById(1L)).thenReturn(Optional.of(existingTask));
-        when(taskRepository.save(any(TaskEntity.class))).thenReturn(existingTask);
+        when(taskRepository.save(any(Task.class))).thenReturn(existingTask);
 
         UpdateTaskDto updateTaskDto = new UpdateTaskDto();
         updateTaskDto.setTitle("Updated Task");
 
         // When
-        TaskEntity result = taskService.updateTask(1L, updateTaskDto);
+        Task result = taskService.updateTask(1L, updateTaskDto);
 
         // Then
         assertNotNull(result, "Updated task should not be null");
@@ -108,7 +108,7 @@ class TaskServiceImplTest {
     void shouldUpdateOnlyTitleWhenOtherFieldsAreNull() {
         // Given
         Long taskId = 1L;
-        TaskEntity existingTask = new TaskEntity();
+        Task existingTask = new Task();
         existingTask.setId(taskId);
         existingTask.setTitle("Old Title");
         existingTask.setDescription("Old Description");
@@ -120,13 +120,13 @@ class TaskServiceImplTest {
 
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
         when(taskRepository.save(existingTask)).thenAnswer(invocation -> {
-            TaskEntity task = invocation.getArgument(0);
+            Task task = invocation.getArgument(0);
             task.setTitle("New Title");
             return task;
         });
 
         // When
-        TaskEntity result = taskService.updateTask(taskId, updateDto);
+        Task result = taskService.updateTask(taskId, updateDto);
 
         // Then
         assertNotNull(result, "Updated task should not be null");
@@ -141,7 +141,7 @@ class TaskServiceImplTest {
     void shouldUpdateTaskTitleDescriptionAndStatus() {
         // Given
         Long taskId = 1L;
-        TaskEntity existingTask = new TaskEntity();
+        Task existingTask = new Task();
         existingTask.setId(taskId);
         existingTask.setTitle("Old Title");
         existingTask.setDescription("Old Description");
@@ -152,7 +152,7 @@ class TaskServiceImplTest {
         updateDto.setDescription("New Description");
         updateDto.setStatus(TaskStatus.DONE);
 
-        TaskEntity updatedTask = new TaskEntity();
+        Task updatedTask = new Task();
         updatedTask.setId(taskId);
         updatedTask.setTitle("New Title");
         updatedTask.setDescription("New Description");
@@ -162,7 +162,7 @@ class TaskServiceImplTest {
         when(taskRepository.save(existingTask)).thenReturn(updatedTask);
 
         // When
-        TaskEntity result = taskService.updateTask(taskId, updateDto);
+        Task result = taskService.updateTask(taskId, updateDto);
 
         // Then
         assertNotNull(result);
@@ -177,7 +177,7 @@ class TaskServiceImplTest {
     void shouldUpdateTaskStatusSuccessfully() {
         // Given
         Long taskId = 1L;
-        TaskEntity existingTask = new TaskEntity();
+        Task existingTask = new Task();
         existingTask.setId(taskId);
         existingTask.setStatus(TaskStatus.TODO);
 
@@ -188,7 +188,7 @@ class TaskServiceImplTest {
         when(taskRepository.save(existingTask)).thenReturn(existingTask);
 
         // When
-        TaskEntity result = taskService.updateTaskStatus(taskId, statusDto);
+        Task result = taskService.updateTaskStatus(taskId, statusDto);
 
         // Then
         assertNotNull(result, "Updated task should not be null");
@@ -211,17 +211,17 @@ class TaskServiceImplTest {
         assertThrows(TaskNotFoundException.class, () -> taskService.updateTaskStatus(taskId, statusDto));
 
         verify(taskRepository).findById(taskId);
-        verify(taskRepository, never()).save(any(TaskEntity.class));
+        verify(taskRepository, never()).save(any(Task.class));
     }
 
     @Test
     void shouldReturnAllTasks() {
         // Given
-        List<TaskEntity> tasks = List.of(new TaskEntity(), new TaskEntity());
+        List<Task> tasks = List.of(new Task(), new Task());
         when(taskRepository.findAll()).thenReturn(tasks);
 
         // When
-        Iterable<TaskEntity> result = taskService.getAllTasks();
+        Iterable<Task> result = taskService.getAllTasks();
 
         // Then
         assertNotNull(result);
@@ -232,11 +232,11 @@ class TaskServiceImplTest {
     @Test
     void shouldReturnAllTasksSortedByDueDateTime() {
         // Given
-        List<TaskEntity> sortedTasks = List.of(new TaskEntity(), new TaskEntity());
+        List<Task> sortedTasks = List.of(new Task(), new Task());
         when(taskRepository.findAllByOrderByDueDateTimeAsc()).thenReturn(sortedTasks);
 
         // When
-        List<TaskEntity> result = taskService.getAllTasksSortedByDueDateTime();
+        List<Task> result = taskService.getAllTasksSortedByDueDateTime();
 
         // Then
         assertNotNull(result);

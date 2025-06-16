@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
-import uk.gov.hmcts.reform.dev.entity.TaskEntity;
-import uk.gov.hmcts.reform.dev.entity.TaskStatus;
+import uk.gov.hmcts.reform.dev.entity.Task;
 import uk.gov.hmcts.reform.dev.service.TaskService;
 import jakarta.validation.Valid;
 
@@ -26,27 +25,27 @@ public class TaskController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TaskEntity createTask(@Valid @RequestBody CreateTaskDto taskDto) {
+    public Task createTask(@Valid @RequestBody CreateTaskDto taskDto) {
         return taskService.createTask(taskDto);
     }
 
     @GetMapping("/{id}")
-    public TaskEntity getTaskById(@PathVariable Long id) {
+    public Task getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
 
     @GetMapping
-    public Iterable<TaskEntity> getAllTasks() {
+    public Iterable<Task> getAllTasks() {
         return taskService.getAllTasksSortedByDueDateTime();
     }
 
     @PutMapping("{id}")
-    public TaskEntity updateTask(@PathVariable Long id, @Validated @RequestBody UpdateTaskDto updateTaskDto) {
+    public Task updateTask(@PathVariable Long id, @Validated @RequestBody UpdateTaskDto updateTaskDto) {
         return taskService.updateTask(id, updateTaskDto);
     }
 
     @PutMapping("{id}/status")
-    public TaskEntity updateTaskStatus(@PathVariable Long id, @Valid @RequestBody TaskStatusDto newStatusDto) {
+    public Task updateTaskStatus(@PathVariable Long id, @Valid @RequestBody TaskStatusDto newStatusDto) {
 
         return taskService.updateTaskStatus(id, newStatusDto);
     }
