@@ -10,9 +10,9 @@ import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskResponseDto;
-import uk.gov.hmcts.reform.dev.entity.Task;
 import uk.gov.hmcts.reform.dev.service.TaskService;
 import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:6969")
@@ -33,12 +33,12 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable Long id) {
+    public CreateTaskResponseDto getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
 
     @GetMapping
-    public Iterable<Task> getAllTasks() {
+    public List<CreateTaskResponseDto> getAllTasks() {
         return taskService.getAllTasksSortedByDueDateTime();
     }
 

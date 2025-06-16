@@ -15,7 +15,9 @@ import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.mappers.TaskMapper;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -42,8 +44,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task getTaskById(Long id) {
-        return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+    public CreateTaskResponseDto getTaskById(Long id) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+        return taskMapper.toCreateTaskResponseDto(task);
     }
 
     @Override
@@ -71,13 +74,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Iterable<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public List<CreateTaskResponseDto> getAllTasks() {
+        return taskRepository.findAll().stream()
+            .map(taskMapper::toCreateTaskResponseDto)
+            .collect(Collectors.toList());
     }
 
     @Override
-    public List<Task> getAllTasksSortedByDueDateTime() {
-        return taskRepository.findAllByOrderByDueDateTimeAsc();
+    public List<CreateTaskResponseDto> getAllTasksSortedByDueDateTime() {
+        return taskRepository.findAll().stream()
+            .sorted(Comparator.comparing(Task::getDueDateTime))
+            .map(taskMapper::toCreateTaskResponseDto)
+            .collect(Collectors.toList());
     }
 
     @Override

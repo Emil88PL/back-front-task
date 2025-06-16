@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.mappers.TaskMapper;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -279,31 +281,88 @@ class TaskServiceImplTest {
     @Test
     void shouldReturnAllTasks() {
         // Given
-        List<Task> tasks = List.of(new Task(), new Task());
+        Task task1 = new Task();
+        task1.setId(1L);
+        task1.setTitle("Task 1");
+
+        Task task2 = new Task();
+        task2.setId(2L);
+        task2.setTitle("Task 2");
+
+        List<Task> tasks = List.of(task1, task2);
+
+        CreateTaskResponseDto responseDto1 = new CreateTaskResponseDto();
+        responseDto1.setId(1L);
+        responseDto1.setTitle("Task 1");
+
+        CreateTaskResponseDto responseDto2 = new CreateTaskResponseDto();
+        responseDto2.setId(2L);
+        responseDto2.setTitle("Task 2");
+
+        List<CreateTaskResponseDto> expectedResponse = List.of(responseDto1, responseDto2);
+
         when(taskRepository.findAll()).thenReturn(tasks);
+        when(taskMapper.toCreateTaskResponseDto(task1)).thenReturn(responseDto1);
+        when(taskMapper.toCreateTaskResponseDto(task2)).thenReturn(responseDto2);
 
         // When
-        Iterable<Task> result = taskService.getAllTasks();
+        List<CreateTaskResponseDto> result = taskService.getAllTasks();
 
         // Then
         assertNotNull(result);
-        assertIterableEquals(tasks, result);
+        assertEquals(2, result.size());
+        assertIterableEquals(expectedResponse, result);
         verify(taskRepository).findAll();
+        verify(taskMapper).toCreateTaskResponseDto(task1);
+        verify(taskMapper).toCreateTaskResponseDto(task2);
     }
 
     @Test
     void shouldReturnAllTasksSortedByDueDateTime() {
         // Given
-        List<Task> sortedTasks = List.of(new Task(), new Task());
-        when(taskRepository.findAllByOrderByDueDateTimeAsc()).thenReturn(sortedTasks);
+        Instant now = Instant.now();
+
+        Task task1 = new Task();
+        task1.setId(1L);
+        task1.setTitle("Task 1");
+        task1.setDueDateTime(now);
+
+        Task task2 = new Task();
+        task2.setId(2L);
+        task2.setTitle("Task 2");
+        task2.setDueDateTime(now.plus(1, ChronoUnit.DAYS));
+
+        List<Task> unsorted = List.of(task2, task1); // out‑of‑order on purpose
+
+        CreateTaskResponseDto dto1 = new CreateTaskResponseDto();
+        dto1.setId(1L);
+        dto1.setTitle("Task 1");
+        dto1.setDueDateTime(now.toString());
+
+        CreateTaskResponseDto dto2 = new CreateTaskResponseDto();
+        dto2.setId(2L);
+        dto2.setTitle("Task 2");
+        dto2.setDueDateTime(now.plus(1, ChronoUnit.DAYS).toString());
+
+        List<CreateTaskResponseDto> expected = List.of(dto1, dto2);
+
+        // Mock repository & mapper
+        when(taskRepository.findAll()).thenReturn(unsorted);
+        when(taskMapper.toCreateTaskResponseDto(task1)).thenReturn(dto1);
+        when(taskMapper.toCreateTaskResponseDto(task2)).thenReturn(dto2);
 
         // When
-        List<Task> result = taskService.getAllTasksSortedByDueDateTime();
+        List<CreateTaskResponseDto> actual = taskService.getAllTasksSortedByDueDateTime();
 
         // Then
-        assertNotNull(result);
-        assertEquals(sortedTasks, result);
-        verify(taskRepository).findAllByOrderByDueDateTimeAsc();
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+
+        // Verify correct repo & mapper usage
+        verify(taskRepository).findAll();
+        verify(taskMapper).toCreateTaskResponseDto(task1);
+        verify(taskMapper).toCreateTaskResponseDto(task2);
+        verifyNoMoreInteractions(taskRepository, taskMapper);
     }
 
     @Test
