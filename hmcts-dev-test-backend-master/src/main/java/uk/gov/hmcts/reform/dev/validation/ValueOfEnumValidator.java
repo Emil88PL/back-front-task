@@ -1,8 +1,7 @@
-package uk.gov.hmcts.reform.dev.configuration;
+package uk.gov.hmcts.reform.dev.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

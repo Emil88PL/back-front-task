@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.dev.dtos;
 
 import jakarta.validation.constraints.NotBlank;
-import uk.gov.hmcts.reform.dev.configuration.ValueOfEnum;
+import uk.gov.hmcts.reform.dev.validation.ValueOfEnum;
 import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 
 public class TaskStatusDto {
