@@ -1,8 +1,7 @@
-package uk.gov.hmcts.reform.dev.service;
+package uk.gov.hmcts.reform.dev.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
@@ -14,13 +13,14 @@ import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.mappers.TaskMapper;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
+import uk.gov.hmcts.reform.dev.service.TaskService;
+
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Validated
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;

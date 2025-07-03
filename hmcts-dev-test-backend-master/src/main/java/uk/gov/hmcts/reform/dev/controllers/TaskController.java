@@ -3,7 +3,16 @@ package uk.gov.hmcts.reform.dev.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
@@ -43,12 +52,14 @@ public class TaskController {
     }
 
     @PutMapping("{id}")
-    public UpdateTaskResponseDto updateTask(@PathVariable Long id, @Validated @RequestBody UpdateTaskDto updateTaskDto) {
+    public UpdateTaskResponseDto updateTask(@PathVariable Long id,
+                                            @Validated @RequestBody UpdateTaskDto updateTaskDto) {
         return taskService.updateTask(id, updateTaskDto);
     }
 
     @PutMapping("{id}/status")
-    public TaskStatusResponseDto updateTaskStatus(@PathVariable Long id, @Valid @RequestBody TaskStatusDto newStatusDto) {
+    public TaskStatusResponseDto updateTaskStatus(@PathVariable Long id,
+                                                  @Valid @RequestBody TaskStatusDto newStatusDto) {
         return taskService.updateTaskStatus(id, newStatusDto);
     }
 

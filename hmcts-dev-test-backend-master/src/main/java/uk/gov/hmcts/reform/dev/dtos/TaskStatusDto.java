@@ -7,7 +7,7 @@ import uk.gov.hmcts.reform.dev.entity.TaskStatus;
 public class TaskStatusDto {
 
     @NotBlank(message = "Status is required")
-    @ValueOfEnum(enumClass = TaskStatus.class, message = "Status must be one of: TODO, IN_PROGRESS, DONE")
+    @ValueOfEnum(enumClass = TaskStatus.class, message = "Status must be one of: To do, In progress, Done")
     private String status;
 
     public String getStatus() {

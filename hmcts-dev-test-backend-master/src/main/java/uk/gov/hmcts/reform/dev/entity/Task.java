@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.Objects;
 
 @Entity
 @Table(name = "tasks")
@@ -100,34 +99,4 @@ public class Task {
         this.createdDate = createdDate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task that = (Task) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(
-            description,
-            that.description
-        ) && status == that.status && Objects.equals(dueDateTime, that.dueDateTime) && Objects.equals(
-            createdDate,
-            that.createdDate
-        );
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, description, status, dueDateTime, createdDate);
-    }
-
-    @Override
-    public String toString() {
-        return "TaskEntity{" +
-            "id=" + id +
-            ", title='" + title + '\'' +
-            ", description='" + description + '\'' +
-            ", status=" + status +
-            ", dueDateTime=" + dueDateTime +
-            ", createdDate=" + createdDate +
-            '}';
-    }
 }
