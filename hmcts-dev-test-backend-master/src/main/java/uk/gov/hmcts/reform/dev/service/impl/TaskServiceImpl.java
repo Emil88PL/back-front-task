@@ -12,7 +12,7 @@ import uk.gov.hmcts.reform.dev.entities.Task;
 import uk.gov.hmcts.reform.dev.entities.TaskStatus;
 import uk.gov.hmcts.reform.dev.exceptions.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.mappers.TaskMapper;
-import uk.gov.hmcts.reform.dev.repository.TaskRepository;
+import uk.gov.hmcts.reform.dev.repositories.TaskRepository;
 import uk.gov.hmcts.reform.dev.service.TaskService;
 
 import java.time.Instant;

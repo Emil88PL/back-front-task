@@ -15,7 +15,7 @@ import uk.gov.hmcts.reform.dev.entities.Task;
 import uk.gov.hmcts.reform.dev.entities.TaskStatus;
 import uk.gov.hmcts.reform.dev.exceptions.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.mappers.TaskMapper;
-import uk.gov.hmcts.reform.dev.repository.TaskRepository;
+import uk.gov.hmcts.reform.dev.repositories.TaskRepository;
 import uk.gov.hmcts.reform.dev.service.impl.TaskServiceImpl;
 
 import java.time.Instant;
@@ -348,7 +348,7 @@ class TaskServiceImplTest {
 
         List<CreateTaskResponseDto> expected = List.of(dto1, dto2);
 
-        // Mock repository & mapper
+        // Mock repositories & mapper
         when(taskRepository.findAll()).thenReturn(unsorted);
         when(taskMapper.toCreateTaskResponseDto(task1)).thenReturn(dto1);
         when(taskMapper.toCreateTaskResponseDto(task2)).thenReturn(dto2);
