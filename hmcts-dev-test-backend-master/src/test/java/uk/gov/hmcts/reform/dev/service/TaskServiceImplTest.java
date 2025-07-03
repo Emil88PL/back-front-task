@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskResponseDto;
 import uk.gov.hmcts.reform.dev.entities.Task;
 import uk.gov.hmcts.reform.dev.entities.TaskStatus;
-import uk.gov.hmcts.reform.dev.exception.TaskNotFoundException;
+import uk.gov.hmcts.reform.dev.exceptions.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.mappers.TaskMapper;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 import uk.gov.hmcts.reform.dev.service.impl.TaskServiceImpl;

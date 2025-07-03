@@ -45,7 +45,7 @@ spring:
       hibernate:
         jdbc:
           lob:
-            # silence the 'wall-of-text' - unnecessary exception throw about blob types
+            # silence the 'wall-of-text' - unnecessary exceptions throw about blob types
             non_contextual_creation: true
     hibernate:
       ddl-auto: update

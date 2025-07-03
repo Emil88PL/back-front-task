@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.dev.exception;
+package uk.gov.hmcts.reform.dev.exceptions;
 
 import uk.gov.hmcts.reform.dev.entities.TaskStatus;
 import java.util.Arrays;
