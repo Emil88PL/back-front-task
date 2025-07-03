@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.dev.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.reform.dev.models.ExampleCase;
+import uk.gov.hmcts.reform.dev.domain.examplecase.ExampleCase;
 
 import java.time.LocalDateTime;
 

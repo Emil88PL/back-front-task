@@ -4,7 +4,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import uk.gov.hmcts.reform.dev.entities.TaskStatus;
+import uk.gov.hmcts.reform.dev.domain.task.TaskStatus;
 import java.time.Instant;
 
 public class UpdateTaskDto {
