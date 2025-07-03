@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.dev.validation;
+package uk.gov.hmcts.reform.dev.validations;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
