@@ -7,8 +7,8 @@ import uk.gov.hmcts.reform.dev.dtos.CreateTaskResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskResponseDto;
-import uk.gov.hmcts.reform.dev.entity.Task;
-import uk.gov.hmcts.reform.dev.entity.TaskStatus;
+import uk.gov.hmcts.reform.dev.entities.Task;
+import uk.gov.hmcts.reform.dev.entities.TaskStatus;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TaskMapper {

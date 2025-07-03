@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.dev.entity;
+package uk.gov.hmcts.reform.dev.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

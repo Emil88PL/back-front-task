@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.dev.exception;
 
-import uk.gov.hmcts.reform.dev.entity.TaskStatus;
+import uk.gov.hmcts.reform.dev.entities.TaskStatus;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
