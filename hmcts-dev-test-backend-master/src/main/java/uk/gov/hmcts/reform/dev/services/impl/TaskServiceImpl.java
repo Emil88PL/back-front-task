@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.dev.service.impl;
+package uk.gov.hmcts.reform.dev.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.dev.entities.TaskStatus;
 import uk.gov.hmcts.reform.dev.exceptions.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.mappers.TaskMapper;
 import uk.gov.hmcts.reform.dev.repositories.TaskRepository;
-import uk.gov.hmcts.reform.dev.service.TaskService;
+import uk.gov.hmcts.reform.dev.services.TaskService;
 
 import java.time.Instant;
 import java.util.Comparator;

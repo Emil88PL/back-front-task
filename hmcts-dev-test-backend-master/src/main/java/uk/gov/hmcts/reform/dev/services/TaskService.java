@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.dev.service;
+package uk.gov.hmcts.reform.dev.services;
 
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.CreateTaskResponseDto;

@@ -19,7 +19,7 @@ import uk.gov.hmcts.reform.dev.dtos.TaskStatusDto;
 import uk.gov.hmcts.reform.dev.dtos.TaskStatusResponseDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskDto;
 import uk.gov.hmcts.reform.dev.dtos.UpdateTaskResponseDto;
-import uk.gov.hmcts.reform.dev.service.TaskService;
+import uk.gov.hmcts.reform.dev.services.TaskService;
 import jakarta.validation.Valid;
 import java.util.List;
 

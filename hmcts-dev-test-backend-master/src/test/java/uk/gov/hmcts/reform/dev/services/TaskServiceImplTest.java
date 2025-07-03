@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.dev.service;
+package uk.gov.hmcts.reform.dev.services;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,7 @@ import uk.gov.hmcts.reform.dev.entities.TaskStatus;
 import uk.gov.hmcts.reform.dev.exceptions.TaskNotFoundException;
 import uk.gov.hmcts.reform.dev.mappers.TaskMapper;
 import uk.gov.hmcts.reform.dev.repositories.TaskRepository;
-import uk.gov.hmcts.reform.dev.service.impl.TaskServiceImpl;
+import uk.gov.hmcts.reform.dev.services.impl.TaskServiceImpl;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -68,7 +68,7 @@ class TaskServiceImplTest {
         expectedResponse.setStatus(TaskStatus.TODO.toString());
         expectedResponse.setDueDateTime(taskDto.getDueDateTime().toString());
 
-        // Remove the toEntity stubbing since it's not used by the service
+        // Remove the toEntity stubbing since it's not used by the services
         when(taskRepository.save(any(Task.class))).thenReturn(savedTask);
         when(taskMapper.toCreateTaskResponseDto(any(Task.class))).thenReturn(expectedResponse);
 
@@ -80,7 +80,7 @@ class TaskServiceImplTest {
         assertEquals("Test Task", result.getTitle(), "Task title should match");
         assertEquals(1L, result.getId(), "Task ID should match");
 
-        // Remove the toEntity verification since it's not called by the service
+        // Remove the toEntity verification since it's not called by the services
         verify(taskRepository).save(any(Task.class));
         verify(taskMapper).toCreateTaskResponseDto(any(Task.class));
     }
