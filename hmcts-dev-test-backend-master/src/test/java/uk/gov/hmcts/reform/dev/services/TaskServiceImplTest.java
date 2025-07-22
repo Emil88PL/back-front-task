@@ -291,7 +291,7 @@ class TaskServiceImplTest {
         task2.setId(2L);
         task2.setTitle("Task 2");
 
-        List<Task> tasks = List.of(task1, task2);
+        final List<Task> tasks = List.of(task1, task2);
 
         CreateTaskResponseDto responseDto1 = new CreateTaskResponseDto();
         responseDto1.setId(1L);
@@ -301,7 +301,7 @@ class TaskServiceImplTest {
         responseDto2.setId(2L);
         responseDto2.setTitle("Task 2");
 
-        List<CreateTaskResponseDto> expectedResponse = List.of(responseDto1, responseDto2);
+        final List<CreateTaskResponseDto> expectedResponse = List.of(responseDto1, responseDto2);
 
         when(taskRepository.findAll()).thenReturn(tasks);
         when(taskMapper.toCreateTaskResponseDto(task1)).thenReturn(responseDto1);
@@ -334,7 +334,7 @@ class TaskServiceImplTest {
         task2.setTitle("Task 2");
         task2.setDueDateTime(now.plus(1, ChronoUnit.DAYS));
 
-        List<Task> unsorted = List.of(task2, task1); // out‑of‑order on purpose
+        final List<Task> unsorted = List.of(task2, task1); // out‑of‑order on purpose
 
         CreateTaskResponseDto dto1 = new CreateTaskResponseDto();
         dto1.setId(1L);
@@ -346,7 +346,7 @@ class TaskServiceImplTest {
         dto2.setTitle("Task 2");
         dto2.setDueDateTime(now.plus(1, ChronoUnit.DAYS).toString());
 
-        List<CreateTaskResponseDto> expected = List.of(dto1, dto2);
+        final List<CreateTaskResponseDto> expected = List.of(dto1, dto2);
 
         // Mock repositories & mapper
         when(taskRepository.findAll()).thenReturn(unsorted);
