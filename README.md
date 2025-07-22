@@ -1,6 +1,6 @@
 # ✨ Simple API and Frontend Application
 
-Link to challenge: [here](https://github.com/hmcts/dts-developer-challenge/blob/master/README.md)
+Link to challenge: <a href="https://github.com/hmcts/dts-developer-challenge/blob/master/README.md" target="_blank">here</a>
 
 ## 📝 Overview
 
@@ -93,14 +93,15 @@ Base URL: `http://localhost:4000/api/v1/tasks`
 
 The backend can run with either:
 
-* **H2 In-Memory Database** (default): no setup required
+* **H2 In-Memory Database** (default): no change is required 
+  * OR
 * **PostgreSQL**:
     1. In `application.yml`, set the active profile:
 
        ```yaml
        spring:
          profiles:
-           active: postgresql
+           active: postgresql (from h2)
        ```
     2. Provide your PostgreSQL credentials in `application-postgresql.yml` or via environment variables.
 
@@ -125,8 +126,10 @@ See [Frontend Application](#-frontend-application).
 
 ## 📄 Original Repositories
 
-* [Backend Starter Repo](https://github.com/hmcts/hmcts-dev-test-backend)
-* [Frontend Starter Repo](https://github.com/hmcts/hmcts-dev-test-frontend)
+<ul>
+  <li><a href="https://github.com/hmcts/hmcts-dev-test-backend" target="_blank">Backend Starter Repo</a></li>
+  <li><a href="https://github.com/hmcts/hmcts-dev-test-frontend" target="_blank">Frontend Starter Repo</a></li>
+</ul>
 
 ---
 ## 🔧 Future Enhancements
