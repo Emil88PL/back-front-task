@@ -66,7 +66,7 @@ Base URL: `http://localhost:4000/api/v1/tasks`
 **Features**:
 
 * Create, view, update, and delete tasks via forms and buttons
-* Connection status polling every **20 seconds**
+* Connection status polling every **20 seconds** if not connected to the backend
 
     * A small dot in the header turns **green** when the backend is reachable and **red** when not
 * Automatic refresh of the task list after modifications
