@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Manager</title>
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body class="noSelect">
+<div class="container">
+  <h1>✨ Task Manager</h1>
+
+  <form id="taskForm">
+
+    <div class="connection-wrapper">
+      <div class="status-indicator" id="connectionStatus">
+        <span id="statusText" class="status-text">Connected</span>
+        <span id="statusDot" class="status-dot"></span>
+      </div>
+    </div>
+
+
+    <label>Task Title
+      <input type="text" id="title" required placeholder="Enter your task title..." maxlength="50">
+    </label>
+    <label>Description
+      <textarea id="description" placeholder="Describe your task in detail..." maxlength="200"></textarea>
+    </label>
+    <label>Status
+      <select id="status">
+        <option value="TODO">📝 To Do</option>
+        <option value="IN_PROGRESS">⚡ In Progress</option>
+        <option value="DONE">✅ Done</option>
+      </select>
+    </label>
+    <label>Due Date:
+      <input type="datetime-local" id="dueDate" required>
+    </label>
+    <div class="formButtons">
+      <button type="submit">💾 Save Task</button>
+      <button type="button" id="deleteAll">❌ Delete All Tasks</button>
+    </div>
+  </form>
+  <div id="errorContainer"></div>
+  <div class="popover" id="editPopover" style="display: none;">
+    <form id="editForm">
+      <input type="hidden" id="editTaskId">
+      <label>Task Title
+        <input type="text" id="editTitle" required>
+      </label>
+      <label>Description
+        <textarea id="editDescription"></textarea>
+      </label>
+      <label>Status
+        <select id="editStatus">
+          <option value="TODO">📝 To Do</option>
+          <option value="IN_PROGRESS">⚡ In Progress</option>
+          <option value="DONE">✅ Done</option>
+        </select>
+      </label>
+      <label>Due Date:
+        <input type="datetime-local" id="editDueDate" required>
+      </label>
+      <div class="formEditButtons">
+        <button type="submit">💾 Update Task</button>
+        <button type="button" id="cancelEdit">❌ Cancel</button>
+      </div>
+      <div id="errorEditContainer"></div>
+    </form>
+  </div>
+
+  <h2>📋 All Tasks</h2>
+  <div id="taskList"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="index.js"></script>
+</body>
+</html>
