@@ -71,7 +71,7 @@ Base URL: `http://localhost:4000/api/v1/tasks`
     * A small dot in the header turns **green** when the backend is reachable and **red** when not
 * Automatic refresh of the task list after modifications
 
-### Running the Frontend
+### 🚀 Running the Frontend
 
 1. Navigate to the `FRONT-END/` directory:
 
@@ -127,3 +127,14 @@ See [Frontend Application](#-frontend-application).
 
 * [Backend Starter Repo](https://github.com/hmcts/hmcts-dev-test-backend)
 * [Frontend Starter Repo](https://github.com/hmcts/hmcts-dev-test-frontend)
+
+---
+## 🔧 Future Enhancements
+
+### Looking ahead, here are the improvements and features I plan to implement:
+
+* Integrate HMCTS Frontend Template: Migrate my custom JS/CSS app into the official HMCTS frontend framework for consistency and maintainability.
+
+* Version 2 with HATEOAS: Introduce a v2 API layer leveraging HATEOAS to make endpoints truly RESTful and self-descriptive.
+
+
