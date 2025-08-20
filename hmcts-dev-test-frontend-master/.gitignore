@@ -38,3 +38,6 @@ version
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+### db ###
+*.mv.db
