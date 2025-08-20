@@ -138,6 +138,4 @@ See [Frontend Application](#-frontend-application).
 
 * Integrate HMCTS Frontend Template: Migrate my custom JS/CSS app into the official HMCTS frontend framework for consistency and maintainability.
 
-* Version 2 with HATEOAS: Introduce a v2 API layer leveraging HATEOAS to make endpoints truly RESTful and self-descriptive.
-
 
