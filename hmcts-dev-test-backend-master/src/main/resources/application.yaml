@@ -25,4 +25,19 @@ management:
 
 springdoc:
   packagesToScan: uk.gov.hmcts.reform.dev.controllers
+
+  # Optional: make OpenAPI output more stable / git-friendly
   writer-with-order-by-keys: true
+
+  # Nice UI improvements
+  swagger-ui:
+    path: /swagger-ui.html                                # default anyway, but explicit is fine
+    operationsSorter: alpha                               # sort operations inside each tag alphabetically
+    tagsSorter: alpha                                     # sort tags alphabetically
+    tryItOutEnabled: true                                 # show "Try it out" expanded by default
+
+  # Optional: give your API a proper title/description/version
+  info:
+    title:      "DEV API"
+    description: "Development APIs for [project/module name]"
+    version:    ${project.version}
